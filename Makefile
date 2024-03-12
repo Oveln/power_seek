@@ -15,6 +15,15 @@ $(BUILD_DIR)/:
 $(TARGET): $(BUILD_DIR)/
 	$(CC) $(CFLAGS) -o $(BUILD_DIR)/$(TARGET) $(SRC)
 
+run: $(TARGET)
+	./$(BUILD_DIR)/$(TARGET)
+
+watch: $(TARGET)
+	watch -n 0.5 ./$(BUILD_DIR)/$(TARGET)
+
+gdb: $(TARGET)
+	gdb $(BUILD_DIR)/$(TARGET)
+
 clean:
 	rm -rf $(BUILD_DIR)
 

@@ -6,12 +6,29 @@
 #define BATTERY char*
 BATTERY *batterys;
 
+// if it's a battery return 1, else return 0
+int is_barrtery(char *name) {
+    char type_path[255];
+    sprintf(type_path,"/sys/class/power_supply/%s/type",name);
+    FILE *f = fopen(type_path,"r");
+    if (f == NULL) {
+        return 0;
+    }
+    char type[20];
+    fscanf(f,"%s",type);
+    fclose(f);
+    if (strcmp(type,"Battery") == 0) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
 void find_batters() {
     int battery_count = 0;
     DIR *dir = opendir("/sys/class/power_supply");
     for (struct dirent *entry = readdir(dir); entry != NULL; entry = readdir(dir)) {
         if (entry->d_type == DT_DIR || entry->d_type == DT_LNK) {
-            if (strncmp(entry->d_name,"BAT",3) == 0) {
+            if (is_barrtery(entry->d_name)) {
                 battery_count++;
                 batterys = realloc(batterys,battery_count*sizeof(char*)+1);
                 batterys[battery_count-1] = malloc(strlen(entry->d_name)+1);

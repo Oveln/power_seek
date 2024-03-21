@@ -32,3 +32,6 @@ deploy: $(TARGET)
 
 remove:
 	rm -f /usr/local/bin/$(TARGET)
+
+update:
+	git pull
